@@ -1,4 +1,4 @@
-## Haskell Minesweeper
+# Haskell Minesweeper
 
 - Minesweeper clone in Haskell
 
@@ -13,7 +13,7 @@
 
 	4. To start a new game, press `Run` again
 
-# TODO: 
+## TODO: 
 - Add difficulties and standardized sizes
 
 - Consider polishing UI a bit more

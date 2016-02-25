@@ -14,6 +14,4 @@
 	4. To start a new game, press `Run` again
 
 ## TODO: 
-- Add difficulties and standardized sizes
-
-- Consider polishing UI a bit more
+- Add difficulties

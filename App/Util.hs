@@ -44,14 +44,14 @@ headMaybe []    = Nothing
 headMaybe (x:_) = Just x
 
 readHeadMaybe :: Read a => String -> Maybe a
-readHeadMaybe = join . liftM readMaybe . headMaybe . words
+readHeadMaybe = join . fmap readMaybe . headMaybe . words
 
 mapMintSet_ :: Monad m => (S.Key -> m a) -> S.IntSet -> m ()
 mapMintSet_ f = S.foldr' ((>>) . f) (return ())
 
 -- GUI helper functions
 buttonGetLabelWidget :: Button -> IO Label
-buttonGetLabelWidget = liftM (castToLabel . head) . containerGetChildren
+buttonGetLabelWidget = fmap (castToLabel . head) . containerGetChildren
 
 setExpand :: WidgetClass self => self -> IO()
 setExpand w = do

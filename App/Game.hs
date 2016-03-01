@@ -20,15 +20,13 @@ runGame window rowE colE clear info grid = do
         Just sweepNow -> widgetDestroy sweepNow
         Nothing       -> return ()
         
-    rMaybe <- liftM readHeadMaybe (entryGetText rowE)
-    cMaybe <- liftM readHeadMaybe (entryGetText colE)
+    rMaybe <- readHeadMaybe <$> entryGetText rowE
+    cMaybe <- readHeadMaybe <$> entryGetText colE
     case (rMaybe,cMaybe) of
-        (Just r, Just c) -> do
-            if r > 25 then
-                labelSetText info "Row value greater than 25.\nWill not continue."
-            else if c > 30 then 
-                labelSetText info "Column value greater than 30.\nWill not continue."
-            else do
+        (Just r, Just c)
+            | r > 25    -> labelSetText info "Row value greater than 25.\nWill not continue."
+            | c > 30    -> labelSetText info "Column value greater than 30.\nWill not continue."
+            | otherwise -> do
                 labelSetMarkup info "New game!"
 
                 sweep <- runGame' r c info
@@ -66,10 +64,9 @@ runGame' r c info = do
         {- Local binding is slightly better for gameLogic because it gives 
          - access to r, c, and info without passing them as arguments -}
         gameLogic :: Int -> Button -> V.Vector Button -> State -> IO()
-        gameLogic i b buttons state = do
-            if isMine state ! i then
-                endGame False (isMine state) info buttons
-            else do
+        gameLogic i b buttons state
+            | isMine state ! i = endGame False (isMine state) info buttons
+            | otherwise        = do
                 reveal b (neighbors state ! i) (totalMines state)
 
                 let eliminate ix = do

@@ -122,7 +122,7 @@ newState r c = do
      - coordinates in elimination is empty -}
     visitedInit <- newArray (1,r*c) False :: IO (IOUArray Int Bool)
 
-    {- Count the unique coordinates -}
+    -- Count the unique coordinates
     total <- newIORef (r*c - S.size mineCoordinates) :: IO (IORef Int)
 
     return State {

@@ -38,10 +38,11 @@ main = do
 
     colI <- labelNew (Just "Columns:")
     colE <- entryNew
-    on colE entryActivated $ runGame window rowE colE clear info grid
 
     runB  <- buttonNewWithLabel "Run"
 
+    on rowE entryActivated  $ runGame window rowE colE clear info grid
+    on colE entryActivated  $ runGame window rowE colE clear info grid
     on runB buttonActivated $ runGame window rowE colE clear info grid
 
     gridAttach grid info  10  0 20  2

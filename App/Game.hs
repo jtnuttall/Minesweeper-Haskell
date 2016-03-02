@@ -24,10 +24,12 @@ runGame window rowE colE clear info grid = do
     cMaybe <- readHeadMaybe <$> entryGetText colE
     case (rMaybe,cMaybe) of
         (Just r, Just c)
+            | r < 5     -> labelSetText info "Row value less than 5.\nWill not continue."
+            | c < 5     -> labelSetText info "Column value greater than 5.\nWill not continue."
             | r > 25    -> labelSetText info "Row value greater than 25.\nWill not continue."
             | c > 30    -> labelSetText info "Column value greater than 30.\nWill not continue."
             | otherwise -> do
-                labelSetMarkup info "New game!"
+                labelSetText info "New game!"
 
                 sweep <- runGame' r c info
                 setExpand sweep
@@ -36,7 +38,7 @@ runGame window rowE colE clear info grid = do
                 widgetShowAll window
                 void . on clear buttonActivated $ do
                     widgetDestroy sweep
-                    labelSetMarkup info "New game!"
+                    labelSetText info "Cleared!"
 
         _ -> labelSetText info "I couldn't read that. Try again."
 

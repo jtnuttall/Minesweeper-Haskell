@@ -75,7 +75,7 @@ renderLabel 5 l = labelSetMarkup l "<span foreground=\"red\"><b>5</b></span>"
 renderLabel 6 l = labelSetMarkup l "<span foreground=\"cyan\"><b>6</b></span>"
 renderLabel 7 l = labelSetMarkup l "<span foreground=\"magenta\"><b>7</b></span>"
 renderLabel 8 l = labelSetMarkup l "<b>8</b>"
-renderLabel _ _ = fail "More than 9 neighbors." -- This should never happen.
+renderLabel _ _ = fail "More than 8 neighbors." -- This should never happen.
 
 -- Game helper functions
 adjacent :: Int -> Int -> [Int]

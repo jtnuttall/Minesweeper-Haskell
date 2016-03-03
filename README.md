@@ -14,7 +14,17 @@
 	4. To start a new game, press `Run` again
 
 ## Compile
-`cabal build`
+- I suggest you create a sandbox first
+
+    cabal sandbox init
+
+- Get the dependencies for the program
+
+    cabal -j --only-dependencies
+
+- Build the program
+
+    cabal build
 
 You can change the option `-with-rtsopts=-N` under `ghc-options` in `Minesweeper.cabal`
 to `-with-rtsopts-Nx` where `x` is the number of cores on the machine to get the parallel

@@ -13,5 +13,12 @@
 
 	4. To start a new game, press `Run` again
 
-## TODO: 
-- Add difficulties
+## Compile
+`cabal build`
+
+You can change the option `-with-rtsopts=-N` under `ghc-options` in `Minesweeper.cabal`
+to `-with-rtsopts-Nx` where `x` is the number of cores on the machine to get the parallel
+garbage collector.
+
+## Run
+`cabal run`

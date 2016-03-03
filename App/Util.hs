@@ -1,5 +1,6 @@
 module App.Util (
      State(..)
+    ,Difficulty(..)
     ,uncurry5
     ,readHeadMaybe
     ,mapMintSet_
@@ -26,6 +27,9 @@ data State = State {
     ,visited     :: IOUArray Int Bool
     ,totalMines :: IORef Int
 }
+
+-- Game difficulty
+data Difficulty = Easy | Medium | Hard
 
 -- General utility
 uncurry5 :: (a -> b -> c -> d -> e -> f) -> (a, b, c, d, e) -> f

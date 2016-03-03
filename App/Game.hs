@@ -13,8 +13,8 @@ import qualified Data.Vector as V
 import System.Random
 
 -- Run game unless input has errors.
-runGame :: Window -> Entry -> Entry -> Button -> Label -> Grid -> IO()
-runGame window rowE colE clear info grid = do
+runGame :: Window -> Entry -> Entry -> Button -> IORef Difficulty -> Label -> Grid -> IO()
+runGame window rowE colE clear diff info grid = do
     sweepMaybe <- gridGetChildAt grid 0 3
     case sweepMaybe of
         Just sweepNow -> widgetDestroy sweepNow
@@ -31,9 +31,9 @@ runGame window rowE colE clear info grid = do
             | otherwise -> do
                 labelSetText info "New game!"
 
-                sweep <- runGame' r c info
+                sweep <- runGame' r c info diff
                 setExpand sweep
-                gridAttach grid sweep 0 3 30 30
+                gridAttach grid sweep 0 3 35 35
 
                 widgetShowAll window
                 void . on clear buttonActivated $ do
@@ -43,8 +43,8 @@ runGame window rowE colE clear info grid = do
         _ -> labelSetText info "I couldn't read that. Try again."
 
 -- Sets up the board and attaches the gameLogic function to each button
-runGame' :: Int -> Int -> Label -> IO Grid
-runGame' r c info = do
+runGame' :: Int -> Int -> Label -> IORef Difficulty -> IO Grid
+runGame' r c info diff = do
     sweep <- gridNew
     let (xs, ys) = V.unzip . V.fromList $ [(x,y) | x <- [1..c], y <- [1..r]]
 
@@ -53,7 +53,7 @@ runGame' r c info = do
         setExpand b
         return b
 
-    state <- newState r c
+    state <- newState r c =<< readIORef diff
     forM_ (V.indexed buttons) $ \(i, b) -> 
         on b buttonActivated $ gameLogic (i+1) b buttons state
 
@@ -96,13 +96,18 @@ runGame' r c info = do
                 then endGame True (isMine state) info buttons
                 else eliminate i
 
-newState :: Int -> Int -> IO State
-newState r c = do
+newState :: Int -> Int -> Difficulty -> IO State
+newState r c difficulty = do
     g <- newStdGen
+
+    let numMines = case difficulty of
+            Easy   -> 10
+            Medium -> 7
+            Hard   -> 5
 
     {- Ensure unique mine coordinates in O(n) time by putting random values 
      - into an IntSet -}
-    let mineCoordinates = S.fromList . take (r*c `quot` 7) $ randomRs (1,r*c) g
+    let mineCoordinates = S.fromList . take (r*c `quot` numMines) $ randomRs (1,r*c) g
 
     stateM <- newArray (1,r*c) False :: IO (IOUArray Int Bool)
     {- mapMintSet_ is a simple utility function that uses IntSet's built-in 

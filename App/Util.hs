@@ -22,9 +22,9 @@ import qualified Data.IntSet as S
 
 -- Game information
 data State = State {
-     isMine      :: UArray Int Bool
-    ,neighbors :: UArray Int Int
-    ,visited     :: IOUArray Int Bool
+     isMine     :: UArray Int Bool
+    ,neighbors  :: UArray Int Int
+    ,visited    :: IOUArray Int Bool
     ,totalMines :: IORef Int
 }
 

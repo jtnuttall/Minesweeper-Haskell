@@ -67,7 +67,7 @@ runGame' r c info diff = do
          - access to r, c, and info without passing them as arguments -}
         gameLogic :: Int -> Button -> V.Vector Button -> State -> IO()
         gameLogic i b buttons state
-            | isMine state ! i = endGame False (isMine state) info buttons
+            | isMine state ! i = endGame False state info buttons
             | otherwise        = do
                 reveal b (neighbors state ! i) (totalMines state)
 
@@ -93,7 +93,7 @@ runGame' r c info diff = do
                     return (remaining == 0)
 
                 if won 
-                then endGame True (isMine state) info buttons
+                then endGame True state info buttons
                 else eliminate i
 
 newState :: Int -> Int -> Difficulty -> IO State
@@ -140,20 +140,22 @@ newState r c difficulty = do
             }
 
 -- Mutate the window if player has won
-endGame :: Bool -> UArray Int Bool -> Label -> V.Vector Button -> IO()
-endGame hasWon mines info buttons = do
+endGame :: Bool -> State -> Label -> V.Vector Button -> IO()
+endGame hasWon state info buttons = do
     let (infoText, mineText)
             | hasWon    = ( "<span foreground=\"blue\"><b>You've won! :)</b></span>"
                           , "<span foreground=\"blue\"><b>:)</b></span>"
                           )
             | otherwise = ( "<span foreground=\"red\"><b>You've been blown up! :(</b></span>"
-                          , "<span foreground=\"black\"><b>*</b></span>"
+                          , "<span foreground=\"red\"><b>*</b></span>"
                           )
 
     labelSetMarkup info infoText
 
-    V.forM_ (V.indexed buttons) $ \(i',b') -> do
-        when (mines ! (i'+1)) $ do
-            lbl <- buttonGetLabelWidget b'
-            labelSetMarkup lbl mineText
-        widgetSetSensitive b' False
+    wasVisited <- unsafeFreeze (visited state) :: IO (UArray Int Bool)
+    V.forM_ (V.indexed buttons) $ \(i',b') ->
+        unless (wasVisited ! (i'+1)) $ do
+            when (isMine state ! (i'+1)) $ do
+                lbl <- buttonGetLabelWidget b'
+                labelSetMarkup lbl mineText
+            widgetSetSensitive b' False

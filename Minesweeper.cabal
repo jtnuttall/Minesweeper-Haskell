@@ -1,5 +1,5 @@
 name:                Minesweeper
-version:             1.2.0.0
+version:             1.2.0.1
 synopsis:            Haskell Minesweeper
 -- description:         
 license:             GPL-3
@@ -23,7 +23,9 @@ executable Minesweeper
                        , text >=1.2 && <1.3
                        , containers >=0.5 && <0.6
   -- Deployment
-  ghc-options: -O2 -Wall -threaded -fno-warn-unused-do-bind -with-rtsopts=-N
+  ghc-options: -O2 -Wall -threaded -fno-warn-unused-do-bind -with-rtsopts=-N3
 
+  -- For profiling
+  --ghc-options: -O2 -Wall -threaded -fno-warn-unused-do-bind -fprof-auto "-with-rtsopts=-N2 -p -s -h -i0.1" -prof
   -- hs-source-dirs:      
   default-language:    Haskell2010

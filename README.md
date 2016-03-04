@@ -20,7 +20,7 @@
 
 - Get the dependencies for the program
 
-		cabal -j --only-dependencies
+		cabal install -j --only-dependencies
 
 - Build the program
 
